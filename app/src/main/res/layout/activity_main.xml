@@ -11,6 +11,7 @@
     <EditText
         android:id="@+id/edt_url"
         android:hint="URL"
+        android:text="http://google.com.vn"
         android:layout_width="match_parent"
         android:layout_height="56dp" />
     <Button

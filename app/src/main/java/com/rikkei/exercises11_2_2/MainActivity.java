@@ -1,5 +1,6 @@
 package com.rikkei.exercises11_2_2;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,20 +35,30 @@ public class MainActivity extends AppCompatActivity {
         btnGet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                thread = new Thread(new Runnable() {
+                String url = edtURL.getText().toString();
+                new AsyncTask<String, Void, String>(){
+
                     @Override
-                    public void run() {
+                    protected String doInBackground(String... params) {
+                        HttpClient client = new DefaultHttpClient();
+                        HttpGet httpGet = new HttpGet(params[0]);
+                        ResponseHandler<String> handler =
+                                new BasicResponseHandler();
                         try {
-                            String url = edtURL.getText().toString().trim();
-                            int num = urlContent(url).length();
-                            tvResult.setText(num+"");
+                            return(client.execute(httpGet, handler));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        return null;
                     }
 
-                });
-                thread.start();
+                    @Override
+                    protected void onPostExecute(String s) {
+                        int length = s.length();
+                        tvResult.setText(length+"");
+                    }
+                }.execute(url);
+
             }
         });
 
